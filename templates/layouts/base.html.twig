@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>EV Charging Tracker - {% block title %}Home{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         {% block stylesheets %}
             <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -20,7 +21,26 @@
     </head>
     <body class="bg-gray-50" style="font-family: 'Poppins',serif">
         <div class="mx-auto max-w-screen-lg p-4">
-            <h1 class="text-2xl font-semibold mb-2">EV Charging Tracker</h1>
+            <div class="flex items-center justify-between mb-4">
+                <h1 class="text-2xl font-semibold mb-2">EV Charging Tracker</h1>
+
+                <button id="dropdownUserButton" data-dropdown-toggle="dropdownUser" class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-300 rounded-full" type="button">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <div id="dropdownUser" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44">
+                    <div class="px-4 py-3 text-sm text-gray-900">
+                        <div>{{ app.user.email }}</div>
+                    </div>
+
+                    <div class="py-2">
+                        <form method="post" action="{{ path('app_logout') }}">
+                            <button type="submit" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Sign out
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <div class="bg-white p-4 rounded-lg mb-4">
                 {% set currentRoute = app.request.attributes.get('_route') %}
@@ -38,21 +58,21 @@
                         class="{{ currentRoute starts with 'charging.' ? 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300' : 'text-gray-500 bg-gray-100 hover:bg-gray-200 focus:ring-gray-300' }} inline-flex items-center justify-center gap-2 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5"
                     >
                         <i class="fa-solid fa-bolt"></i>
-                        My chargings
+                        Chargings
                     </a>
                     <a
                         href="{{ path('car.index') }}"
                         class="{{ currentRoute starts with 'car.' ? 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300' : 'text-gray-500 bg-gray-100 hover:bg-gray-200 focus:ring-gray-300' }} inline-flex items-center justify-center gap-2 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5"
                     >
                         <i class="fa-solid fa-car"></i>
-                        My cars
+                        Cars
                     </a>
                     <a
                         href="{{ path('station.index') }}"
                         class="{{ currentRoute starts with 'station.' ? 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300' : 'text-gray-500 bg-gray-100 hover:bg-gray-200 focus:ring-gray-300' }} inline-flex items-center justify-center gap-2 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5"
                     >
                         <i class="fa-solid fa-plug-circle-bolt"></i>
-                        My stations
+                        Stations
                     </a>
                 </div>
             </div>

@@ -42,9 +42,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Car::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $cars;
 
+    /**
+     * @var Collection<int, Station>
+     */
+    #[ORM\OneToMany(targetEntity: Station::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $stations;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
+        $this->stations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,7 +125,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $data = (array) $this;
         $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
-        
+
         return $data;
     }
 
@@ -152,6 +159,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($car->getOwner() === $this) {
                 $car->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Station>
+     */
+    public function getStations(): Collection
+    {
+        return $this->stations;
+    }
+
+    public function addStation(Station $station): static
+    {
+        if (!$this->stations->contains($station)) {
+            $this->stations->add($station);
+            $station->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStation(Station $station): static
+    {
+        if ($this->stations->removeElement($station)) {
+            // set the owning side to null (unless already changed)
+            if ($station->getOwner() === $this) {
+                $station->setOwner(null);
             }
         }
 

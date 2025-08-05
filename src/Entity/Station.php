@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\StationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: StationRepository::class)]
@@ -32,6 +34,17 @@ class Station
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    /**
+     * @var Collection<int, Charging>
+     */
+    #[ORM\OneToMany(targetEntity: Charging::class, mappedBy: 'station', orphanRemoval: true)]
+    private Collection $chargings;
+
+    public function __construct()
+    {
+        $this->chargings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +119,36 @@ class Station
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Charging>
+     */
+    public function getChargings(): Collection
+    {
+        return $this->chargings;
+    }
+
+    public function addCharging(Charging $charging): static
+    {
+        if (!$this->chargings->contains($charging)) {
+            $this->chargings->add($charging);
+            $charging->setStation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharging(Charging $charging): static
+    {
+        if ($this->chargings->removeElement($charging)) {
+            // set the owning side to null (unless already changed)
+            if ($charging->getStation() === $this) {
+                $charging->setStation(null);
+            }
+        }
 
         return $this;
     }

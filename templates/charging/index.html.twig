@@ -3,5 +3,79 @@
 {% block title %}My chargings{% endblock %}
 
 {% block body %}
-    <h1>My chargings</h1>
+    <div class="rounded-lg border border-gray-200 bg-white p-4 md:p-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="mb-4 text-xl font-semibold">My chargings</h3>
+
+            <a href="{{ path('charging.create') }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
+                <i class="fa-solid fa-plus"></i>
+                Add charging
+            </a>
+        </div>
+
+        {% if chargings is empty %}
+            <p class="text-center text-sm italic text-gray-500">No chargings</p>
+        {% else %}
+            <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Car
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Station
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Date
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Total kWh
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Total cost
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Duration
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for charging in chargings %}
+                            <tr class="bg-white border-b border-gray-200">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900">
+                                    {{ charging.car.displayName }}
+                                </th>
+                                <td class="px-6 py-4">
+                                    {{ charging.station.name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ charging.date|date('d/m/Y') }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ charging.totalKwh }} kWh
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ charging.totalCost }} €
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if charging.duration %}
+                                        {{ charging.duration|date('H:i') }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="{{ path('charging.edit', {id: charging.id}) }}" class="text-gray-900 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm px-4 py-2">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

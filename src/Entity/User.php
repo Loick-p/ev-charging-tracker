@@ -48,10 +48,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Station::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $stations;
 
+    /**
+     * @var Collection<int, Charging>
+     */
+    #[ORM\OneToMany(targetEntity: Charging::class, mappedBy: 'owner', orphanRemoval: true)]
+    private Collection $chargings;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
         $this->stations = new ArrayCollection();
+        $this->chargings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,6 +196,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($station->getOwner() === $this) {
                 $station->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Charging>
+     */
+    public function getChargings(): Collection
+    {
+        return $this->chargings;
+    }
+
+    public function addCharging(Charging $charging): static
+    {
+        if (!$this->chargings->contains($charging)) {
+            $this->chargings->add($charging);
+            $charging->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharging(Charging $charging): static
+    {
+        if ($this->chargings->removeElement($charging)) {
+            // set the owning side to null (unless already changed)
+            if ($charging->getOwner() === $this) {
+                $charging->setOwner(null);
             }
         }
 

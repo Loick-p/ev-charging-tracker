@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CarRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
@@ -38,6 +40,17 @@ class Car
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    /**
+     * @var Collection<int, Charging>
+     */
+    #[ORM\OneToMany(targetEntity: Charging::class, mappedBy: 'car', orphanRemoval: true)]
+    private Collection $chargings;
+
+    public function __construct()
+    {
+        $this->chargings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -136,6 +149,41 @@ class Car
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->brand . ' ' . $this->model . ' ' . $this->year;
+    }
+
+    /**
+     * @return Collection<int, Charging>
+     */
+    public function getChargings(): Collection
+    {
+        return $this->chargings;
+    }
+
+    public function addCharging(Charging $charging): static
+    {
+        if (!$this->chargings->contains($charging)) {
+            $this->chargings->add($charging);
+            $charging->setCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharging(Charging $charging): static
+    {
+        if ($this->chargings->removeElement($charging)) {
+            // set the owning side to null (unless already changed)
+            if ($charging->getCar() === $this) {
+                $charging->setCar(null);
+            }
+        }
 
         return $this;
     }

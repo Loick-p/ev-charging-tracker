@@ -6,6 +6,7 @@ use App\Entity\Car;
 use App\Entity\Charging;
 use App\Entity\Station;
 use App\Entity\User;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -22,6 +23,11 @@ class ChargingType extends AbstractType
             ->add('car', EntityType::class, [
                 'class' => Car::class,
                 'choice_label' => 'displayName',
+                'query_builder' => function (EntityRepository $er) use ($options) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.owner = :owner')
+                        ->setParameter('owner', $options['owner']);
+                },
             ])
             ->add('station', EntityType::class, [
                 'class' => Station::class,
@@ -47,6 +53,7 @@ class ChargingType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Charging::class,
+            'owner' => null,
         ]);
     }
 }

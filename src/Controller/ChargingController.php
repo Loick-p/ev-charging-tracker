@@ -29,7 +29,9 @@ final class ChargingController extends AbstractController
     {
         $charging = new Charging();
 
-        $form = $this->createForm(ChargingType::class, $charging);
+        $form = $this->createForm(ChargingType::class, $charging, [
+            'owner' => $this->getUser(),
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -46,7 +48,9 @@ final class ChargingController extends AbstractController
     #[Route('/chargings/{id}', name: 'charging.edit', methods: ['GET', 'POST'])]
     public function edit(Charging $charging, Request $request): Response
     {
-        $form = $this->createForm(ChargingType::class, $charging);
+        $form = $this->createForm(ChargingType::class, $charging, [
+            'owner' => $this->getUser(),
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

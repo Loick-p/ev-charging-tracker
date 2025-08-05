@@ -13,9 +13,12 @@
         <div class="w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8">
             {{ form_start(form) }}
                 <div class="mb-4">
-                    {{ form_label(form.brand, 'Brand', {
-                        'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
-                    }) }}
+                    <div class="flex gap-1">
+                        {{ form_label(form.brand, 'Brand', {
+                            'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
+                        }) }}
+                        <span class="text-red-500">*</span>
+                    </div>
 
                     {{ form_widget(form.brand, {
                         'attr': {
@@ -28,9 +31,12 @@
                 </div>
 
                 <div class="mb-4">
-                    {{ form_label(form.model, 'Model', {
-                        'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
-                    }) }}
+                    <div class="flex gap-1">
+                        {{ form_label(form.model, 'Model', {
+                            'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
+                        }) }}
+                        <span class="text-red-500">*</span>
+                    </div>
 
                     {{ form_widget(form.model, {
                         'attr': {
@@ -43,9 +49,12 @@
                 </div>
 
                 <div class="mb-4">
-                    {{ form_label(form.year, 'Year', {
-                        'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
-                    }) }}
+                    <div class="flex gap-1">
+                        {{ form_label(form.year, 'Year', {
+                            'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
+                        }) }}
+                        <span class="text-red-500">*</span>
+                    </div>
 
                     {{ form_widget(form.year, {
                         'attr': {
@@ -58,9 +67,12 @@
                 </div>
 
                 <div class="mb-4">
-                    {{ form_label(form.range, 'Range (km)', {
-                        'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
-                    }) }}
+                    <div class="flex gap-1">
+                        {{ form_label(form.range, 'Range (km)', {
+                            'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
+                        }) }}
+                        <span class="text-red-500">*</span>
+                    </div>
 
                     {{ form_widget(form.range, {
                         'attr': {
@@ -73,9 +85,12 @@
                 </div>
 
                 <div class="mb-4">
-                    {{ form_label(form.batteryCapacity, 'Battery capacity (kwh)', {
-                        'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
-                    }) }}
+                    <div class="flex gap-1">
+                        {{ form_label(form.batteryCapacity, 'Battery capacity (kwh)', {
+                            'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900'}
+                        }) }}
+                        <span class="text-red-500">*</span>
+                    </div>
 
                     {{ form_widget(form.batteryCapacity, {
                         'attr': {

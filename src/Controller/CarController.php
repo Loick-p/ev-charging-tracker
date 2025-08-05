@@ -20,7 +20,7 @@ final class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/car/create', name: 'car.create', methods: ['GET', 'POST'])]
+    #[Route('/cars/create', name: 'car.create', methods: ['GET', 'POST'])]
     public function create(Request $request, CarService $carService): Response
     {
         $car = new Car();
@@ -38,7 +38,7 @@ final class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/car/{id}', name: 'car.edit', methods: ['GET', 'POST'])]
+    #[Route('/cars/{id}', name: 'car.edit', methods: ['GET', 'POST'])]
     public function edit(Car $car, Request $request, CarService $carService): Response
     {
         $form = $this->createForm(CarType::class, $car);
@@ -56,7 +56,7 @@ final class CarController extends AbstractController
         ]);
     }
 
-    #[Route('/car/{id}/remove', name: 'car.remove', methods: ['POST'])]
+    #[Route('/cars/{id}/remove', name: 'car.remove', methods: ['POST'])]
     public function remove(Car $car, Request $request, CarService $carService): Response
     {
         if ($this->isCsrfTokenValid('remove_car_' . $car->getId(), $request->request->get('_token'))) {

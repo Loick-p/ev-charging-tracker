@@ -8,14 +8,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class CarService
 {
-    private CarRepository $carRepository;
-    private Security $security;
-
-    public function __construct(CarRepository $carRepository, Security $security)
-    {
-        $this->carRepository = $carRepository;
-        $this->security = $security;
-    }
+    public function __construct(
+        private CarRepository $carRepository,
+        private Security $security
+    ) {}
 
     public function getCars(): array
     {

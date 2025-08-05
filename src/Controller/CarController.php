@@ -12,23 +12,27 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class CarController extends AbstractController
 {
+    public function __construct(
+        private readonly CarService $carService
+    ) {}
+
     #[Route('/cars', name: 'car.index', methods: ['GET'])]
-    public function index(CarService $carService): Response
+    public function index(): Response
     {
         return $this->render('car/index.html.twig', [
-            'cars' => $carService->getCars(),
+            'cars' => $this->carService->getCars(),
         ]);
     }
 
     #[Route('/cars/create', name: 'car.create', methods: ['GET', 'POST'])]
-    public function create(Request $request, CarService $carService): Response
+    public function create(Request $request): Response
     {
         $car = new Car();
         $form = $this->createForm(CarType::class, $car);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $carService->createCar($car);
+            $this->carService->createCar($car);
 
             return $this->redirectToRoute('car.index');
         }
@@ -39,13 +43,13 @@ final class CarController extends AbstractController
     }
 
     #[Route('/cars/{id}', name: 'car.edit', methods: ['GET', 'POST'])]
-    public function edit(Car $car, Request $request, CarService $carService): Response
+    public function edit(Car $car, Request $request): Response
     {
         $form = $this->createForm(CarType::class, $car);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $carService->editCar($car);
+            $this->carService->editCar($car);
 
             return $this->redirectToRoute('car.index');
         }
@@ -57,10 +61,10 @@ final class CarController extends AbstractController
     }
 
     #[Route('/cars/{id}/remove', name: 'car.remove', methods: ['POST'])]
-    public function remove(Car $car, Request $request, CarService $carService): Response
+    public function remove(Car $car, Request $request): Response
     {
         if ($this->isCsrfTokenValid('remove_car_' . $car->getId(), $request->request->get('_token'))) {
-            $carService->removeCar($car);
+            $this->carService->removeCar($car);
         }
 
         return $this->redirectToRoute('car.index');

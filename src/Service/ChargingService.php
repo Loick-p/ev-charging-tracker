@@ -18,6 +18,23 @@ class ChargingService
         return $this->security->getUser()->getChargings()->toArray();
     }
 
+    public function getChargingStats(?string $dateRange): array
+    {
+        $startDate = null;
+        $endDate = null;
+        if ($dateRange) {
+            [$startStr, $endStr] = explode(' - ', $dateRange);
+            $startDate = \DateTime::createFromFormat('d/m/Y', trim($startStr));
+            $endDate = \DateTime::createFromFormat('d/m/Y', trim($endStr));
+        }
+
+        return $this->chargingRepository->getOwnerChargingStats(
+            $this->security->getUser()->getId(),
+            $startDate,
+            $endDate
+        );
+    }
+
     public function createCharging(Charging $charging): Charging
     {
         $charging->setOwner($this->security->getUser());

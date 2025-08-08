@@ -34,6 +34,27 @@ class ChargingRepository extends ServiceEntityRepository
         }
     }
 
+    public function getOwnerChargingStats(
+        int $ownerId,
+        ?\DateTimeInterface $startDate = null,
+        ?\DateTimeInterface $endDate = null
+    ): array {
+        $qb = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id) as total_chargings')
+            ->addSelect('SUM(c.totalKwh) as total_kwh')
+            ->addSelect('SUM(c.totalCost) as total_cost')
+            ->where('c.owner = :ownerId')
+            ->setParameter('ownerId', $ownerId);
+
+        if ($startDate && $endDate) {
+            $qb->andWhere('c.date BETWEEN :start AND :end')
+                ->setParameter('start', $startDate->setTime(0, 0, 0))
+                ->setParameter('end', $endDate->setTime(23, 59, 59));
+        }
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
 //    /**
 //     * @return Charging[] Returns an array of Charging objects
 //     */

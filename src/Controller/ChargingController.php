@@ -17,10 +17,13 @@ final class ChargingController extends AbstractController
     ) {}
 
     #[Route('/chargings', name: 'charging.index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('charging/index.html.twig', [
-            'chargings' => $this->chargingService->getChargings(),
+            'chargings' => $this->chargingService->getChargings(
+                $request->query->getInt('page', 1),
+                20
+            ),
         ]);
     }
 

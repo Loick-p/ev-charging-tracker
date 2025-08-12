@@ -17,10 +17,12 @@ final class StationController extends AbstractController
     ) {}
 
     #[Route('/stations', name: 'station.index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('station/index.html.twig', [
-            'stations' => $this->stationService->getStations(),
+            'stations' => $this->stationService->getStations(
+                $request->query->getInt('page', 1),
+            ),
         ]);
     }
 

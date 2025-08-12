@@ -17,10 +17,12 @@ final class CarController extends AbstractController
     ) {}
 
     #[Route('/cars', name: 'car.index', methods: ['GET'])]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('car/index.html.twig', [
-            'cars' => $this->carService->getCars(),
+            'cars' => $this->carService->getCars(
+                $request->query->getInt('page', 1)
+            ),
         ]);
     }
 

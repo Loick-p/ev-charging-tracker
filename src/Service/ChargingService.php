@@ -4,18 +4,25 @@ namespace App\Service;
 
 use App\Entity\Charging;
 use App\Repository\ChargingRepository;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class ChargingService
 {
     public function __construct(
         private ChargingRepository $chargingRepository,
+        private EntityFetcherService $fetcher,
         private Security $security
     ) {}
 
-    public function getChargings(): array
+    public function getChargings(int $page = 1, int $limit = 10): PaginationInterface
     {
-        return $this->security->getUser()->getChargings()->toArray();
+        return $this->fetcher->fetchByOwner(
+            Charging::class,
+            $this->security->getUser(),
+            $page,
+            $limit,
+        );
     }
 
     public function getChargingStats(?string $dateRange): array

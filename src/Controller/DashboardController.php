@@ -19,9 +19,11 @@ final class DashboardController extends AbstractController
     public function index(Request $request): Response
     {
         $stats = $this->chargingService->getChargingStats($request->query->get('daterange'));
+        $lastChargings = $this->chargingService->getLastChargings();
 
         return $this->render('dashboard/index.html.twig', [
             'stats' => $stats,
+            'lastChargings' => $lastChargings,
         ]);
     }
 }

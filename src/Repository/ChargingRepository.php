@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Charging;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -35,7 +36,7 @@ class ChargingRepository extends ServiceEntityRepository
     }
 
     public function getOwnerChargingStats(
-        int $ownerId,
+        User $owner,
         ?\DateTimeInterface $startDate = null,
         ?\DateTimeInterface $endDate = null
     ): array {
@@ -43,8 +44,8 @@ class ChargingRepository extends ServiceEntityRepository
             ->select('COUNT(c.id) as total_chargings')
             ->addSelect('SUM(c.totalKwh) as total_kwh')
             ->addSelect('SUM(c.totalCost) as total_cost')
-            ->where('c.owner = :ownerId')
-            ->setParameter('ownerId', $ownerId);
+            ->where('c.owner = :owner')
+            ->setParameter('owner', $owner);
 
         if ($startDate && $endDate) {
             $qb->andWhere('c.date BETWEEN :start AND :end')
@@ -55,28 +56,14 @@ class ChargingRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleResult();
     }
 
-//    /**
-//     * @return Charging[] Returns an array of Charging objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Charging
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findLastChargingByOwner(User $owner, int $limit = 5): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.owner = :owner')
+            ->setParameter('owner', $owner)
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -36,9 +36,17 @@ class ChargingService
         }
 
         return $this->chargingRepository->getOwnerChargingStats(
-            $this->security->getUser()->getId(),
+            $this->security->getUser(),
             $startDate,
             $endDate
+        );
+    }
+
+    public function getLastChargings(int $limit = 5): array
+    {
+        return $this->chargingRepository->findLastChargingByOwner(
+            $this->security->getUser(),
+            $limit
         );
     }
 

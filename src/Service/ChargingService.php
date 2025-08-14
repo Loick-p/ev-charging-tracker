@@ -15,13 +15,14 @@ class ChargingService
         private Security $security
     ) {}
 
-    public function getChargings(int $page = 1, int $limit = 10): PaginationInterface
+    public function getChargings(int $page = 1, int $limit = 10, string $sortField): PaginationInterface
     {
         return $this->fetcher->fetchByOwner(
             Charging::class,
             $this->security->getUser(),
             $page,
             $limit,
+            $sortField,
         );
     }
 

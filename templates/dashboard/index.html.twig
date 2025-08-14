@@ -83,11 +83,11 @@
                             <td class="px-6 py-4">
                                 {{ charging.date|date('d/m/Y') }}
                             </td>
-                            <td class="px-6 py-4">
-                                {{ charging.totalKwh }} kWh
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ charging.totalKwh|round(2) }} kWh
                             </td>
-                            <td class="px-6 py-4">
-                                {{ charging.totalCost }} €
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ charging.totalCost|round(2) }} €
                             </td>
                             <td class="px-6 py-4">
                                 {% if charging.duration %}

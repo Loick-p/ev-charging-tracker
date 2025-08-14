@@ -61,7 +61,7 @@ class ChargingRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.owner = :owner')
             ->setParameter('owner', $owner)
-            ->orderBy('c.createdAt', 'DESC')
+            ->orderBy('c.date', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();

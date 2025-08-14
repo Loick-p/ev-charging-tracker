@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Car;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -35,8 +33,7 @@ class CarType extends AbstractType
                     'max' => (int) date('Y') + 1,
                 ]
             ])
-            ->add('range', NumberType::class, [
-                'html5' => true,
+            ->add('range', IntegerType::class, [
                 'attr' => [
                     'min' => 1,
                     'max' => 1000,

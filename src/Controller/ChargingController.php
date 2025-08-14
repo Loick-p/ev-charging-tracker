@@ -23,7 +23,8 @@ final class ChargingController extends AbstractController
         return $this->render('charging/index.html.twig', [
             'chargings' => $this->chargingService->getChargings(
                 $request->query->getInt('page', 1),
-                20
+                10,
+                'date',
             ),
         ]);
     }

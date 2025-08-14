@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Car;
 use App\Entity\Charging;
 use App\Entity\Station;
-use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

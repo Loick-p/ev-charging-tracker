@@ -30,7 +30,7 @@ class Car
     private ?int $year = null;
 
     #[ORM\Column]
-    private ?float $range = null;
+    private ?int $range = null;
 
     #[ORM\Column]
     private ?float $batteryCapacity = null;
@@ -105,12 +105,12 @@ class Car
         return $this;
     }
 
-    public function getRange(): ?float
+    public function getRange(): ?int
     {
         return $this->range;
     }
 
-    public function setRange(float $range): static
+    public function setRange(int $range): static
     {
         $this->range = $range;
 

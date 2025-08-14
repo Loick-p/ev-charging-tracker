@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class CarController extends AbstractController
 {
@@ -46,6 +47,7 @@ final class CarController extends AbstractController
     }
 
     #[Route('/cars/{id}', name: 'car.edit', methods: ['GET', 'POST'])]
+    #[IsGranted('EDIT', subject: 'car')]
     public function edit(Car $car, Request $request): Response
     {
         $form = $this->createForm(CarType::class, $car);
@@ -65,6 +67,7 @@ final class CarController extends AbstractController
     }
 
     #[Route('/cars/{id}/remove', name: 'car.remove', methods: ['POST'])]
+    #[IsGranted('DELETE', subject: 'car')]
     public function remove(Car $car, Request $request): Response
     {
         if ($this->isCsrfTokenValid('remove_car_' . $car->getId(), $request->request->get('_token'))) {

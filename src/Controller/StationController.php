@@ -37,6 +37,7 @@ final class StationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->stationService->createStation($station);
 
+            $this->addFlash('success', 'Station created successfully.');
             return $this->redirectToRoute('station.index');
         }
 
@@ -54,6 +55,7 @@ final class StationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->stationService->editStation($station);
 
+            $this->addFlash('success', 'Station updated successfully.');
             return $this->redirectToRoute('station.index');
         }
 
@@ -68,6 +70,7 @@ final class StationController extends AbstractController
     {
         if ($this->isCsrfTokenValid('remove_station_' . $station->getId(), $request->request->get('_token'))) {
             $this->stationService->removeStation($station);
+            $this->addFlash('success', 'Station deleted successfully.');
         }
 
         return $this->redirectToRoute('station.index');

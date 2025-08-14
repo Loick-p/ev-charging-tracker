@@ -40,6 +40,7 @@ final class ChargingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->chargingService->createCharging($charging);
 
+            $this->addFlash('success', 'Charging session created successfully.');
             return $this->redirectToRoute('charging.index');
         }
 
@@ -59,6 +60,7 @@ final class ChargingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->chargingService->editCharging($charging);
 
+            $this->addFlash('success', 'Charging session updated successfully.');
             return $this->redirectToRoute('charging.index');
         }
 
@@ -73,6 +75,7 @@ final class ChargingController extends AbstractController
     {
         if ($this->isCsrfTokenValid('remove_charging_' . $charging->getId(), $request->request->get('_token'))) {
             $this->chargingService->removeCharging($charging);
+            $this->addFlash('success', 'Charging session deleted successfully.');
         }
 
         return $this->redirectToRoute('charging.index');

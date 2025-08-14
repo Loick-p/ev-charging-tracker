@@ -36,6 +36,7 @@ final class CarController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->carService->createCar($car);
 
+            $this->addFlash('success', 'Car created successfully.');
             return $this->redirectToRoute('car.index');
         }
 
@@ -53,6 +54,7 @@ final class CarController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->carService->editCar($car);
 
+            $this->addFlash('success', 'Car updated successfully.');
             return $this->redirectToRoute('car.index');
         }
 
@@ -67,6 +69,7 @@ final class CarController extends AbstractController
     {
         if ($this->isCsrfTokenValid('remove_car_' . $car->getId(), $request->request->get('_token'))) {
             $this->carService->removeCar($car);
+            $this->addFlash('success', 'Car deleted successfully.');
         }
 
         return $this->redirectToRoute('car.index');

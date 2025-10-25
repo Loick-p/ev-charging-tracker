@@ -1,6 +1,6 @@
 services:
     db:
-        image: postgres:17.5
+        image: postgres:18.0-alpine
         container_name: db
         environment:
             POSTGRES_DB: ${POSTGRES_DB}
@@ -9,34 +9,8 @@ services:
         ports:
             - '5432:5432'
         volumes:
-            - pg-data:/var/lib/postgresql/data
+            - ev-charging-tracker-local-data:/var/lib/postgresql
         restart: unless-stopped
-        networks:
-            - app
-
-    app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-            args:
-                - APP_ENV=dev
-        container_name: app
-        ports:
-            - "80:80"
-        volumes:
-            - .:/app
-            - ./Caddyfile:/etc/caddy/Caddyfile:ro
-        environment:
-            - APP_ENV=dev
-            - FRANKENPHP_CONFIG=worker ./public/index.php
-        depends_on:
-            - db
-        restart: unless-stopped
-        networks:
-            - app
 
 volumes:
-    pg-data:
-
-networks:
-    app:
+    ev-charging-tracker-local-data:

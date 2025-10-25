@@ -1,6 +1,4 @@
-FROM dunglas/frankenphp:latest-php8.3
-
-ARG APP_ENV=prod
+FROM dunglas/frankenphp:1.9-php8.3
 
 RUN install-php-extensions \
     pdo_pgsql \
@@ -10,32 +8,28 @@ RUN install-php-extensions \
     opcache \
     apcu
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+COPY docker/php/conf.d/app.ini $PHP_INI_DIR/conf.d/
+
+COPY --from=composer:2.8.12 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
+COPY composer.json composer.lock symfony.lock ./
+
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
+
 COPY . .
 
-RUN if [ "$APP_ENV" = "prod" ]; then \
-        composer install --no-dev --optimize-autoloader --no-interaction; \
-    else \
-        composer install --no-interaction; \
-    fi
+COPY docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
 
-RUN if [ "$APP_ENV" = "prod" ]; then \
-        if [ -f "Caddyfile.prod" ]; then \
-            cp Caddyfile.prod /etc/caddy/Caddyfile; \
-        else \
-            cp Caddyfile /etc/caddy/Caddyfile; \
-        fi; \
-    fi
+RUN mkdir -p var/cache var/log \
+    && chown -R www-data:www-data var \
+    && chmod -R 775 var
 
-RUN chown -R www-data:www-data /app && \
-    chmod -R 755 /app
-
-RUN if [ "$APP_ENV" = "prod" ]; then \
-        php bin/console cache:clear --env=prod --no-debug --no-interaction; \
-        php bin/console cache:warmup --env=prod --no-debug --no-interaction; \
-    fi
+RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
 
 EXPOSE 80 443
+
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]

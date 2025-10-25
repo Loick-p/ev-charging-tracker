@@ -1,46 +1,44 @@
 services:
-    db:
-        image: postgres:17.5
-        container_name: db_prod
-        environment:
-            POSTGRES_DB: ${POSTGRES_DB}
-            POSTGRES_USER: ${POSTGRES_USER}
-            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        ports:
-            - '5432:5432'
-        volumes:
-            - pg-data:/var/lib/postgresql/data
-        restart: unless-stopped
-        networks:
-            - app
-
     app:
         build:
             context: .
             dockerfile: Dockerfile
-            args:
-                - APP_ENV=prod
-        container_name: app
-        ports:
-            - "80:80"
-            - "443:443"
+        container_name: ev-charging-tracker-app
+        restart: unless-stopped
         volumes:
-            - caddy_data:/data
-            - caddy_config:/config
-        environment:
-            - APP_ENV=prod
-            - DOMAIN=${DOMAIN:-localhost}
-            - FRANKENPHP_CONFIG=worker ./public/index.php
+            - ./var:/app/var
+        labels:
+            - "traefik.enable=true"
+            - "traefik.docker.network=web"
+            - "traefik.http.routers.ev-charging-tracker-app.rule=Host(`evtracking.loickpostel.fr`)"
+            - "traefik.http.routers.ev-charging-tracker-app.entrypoints=websecure"
+            - "traefik.http.routers.ev-charging-tracker-app.tls=true"
+            - "traefik.http.routers.ev-charging-tracker-app.tls.certresolver=loickpostelresolver"
+            - "traefik.http.services.ev-charging-tracker-app.loadbalancer.server.port=80"
         depends_on:
             - db
-        restart: unless-stopped
         networks:
-            - app
+            - web
+            - internal
+
+    db:
+        image: postgres:18.0-alpine
+        container_name: ev-charging-tracker-db
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - ev-charging-tracker-data:/var/lib/postgresql
+        networks:
+            - internal
 
 volumes:
-    pg-data:
-    caddy_data:
-    caddy_config:
+    ev-charging-tracker-data:
 
 networks:
-    app:
+    web:
+        external: true
+    internal:
+        driver: bridge

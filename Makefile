@@ -12,7 +12,7 @@ dev-stop:
 	$(DOCKER_COMPOSE_DEV) down
 
 ##
-## PRO
+## PROD
 ##
 
 prod-build:

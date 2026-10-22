@@ -1,4 +1,4 @@
-FROM dunglas/frankenphp:1.13.1-php8.5
+FROM dunglas/frankenphp:1.13.2-php8-alpine
 
 RUN install-php-extensions \
     pdo_pgsql \

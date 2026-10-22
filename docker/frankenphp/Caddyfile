@@ -10,6 +10,9 @@
 	root * /app/public
 	encode zstd gzip
 
+	@health path /healthz
+    respond @health "OK" 200
+
 	@hidden path_regexp \/\.
 	respond @hidden 404
 

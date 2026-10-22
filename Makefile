@@ -12,7 +12,7 @@ dev-stop:
 	$(DOCKER_COMPOSE_DEV) down
 
 ##
-## PRO
+## PROD
 ##
 
 prod-build:
@@ -39,3 +39,6 @@ prod-logs-db:
 prod-deploy:
 	$(DOCKER_COMPOSE_PROD) build
 	$(DOCKER_COMPOSE_PROD) up -d
+
+prod-migrate:
+	$(DOCKER_COMPOSE_PROD) exec app php bin/console doctrine:migrations:migrate --no-interaction

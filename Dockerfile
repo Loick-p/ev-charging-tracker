@@ -22,14 +22,13 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interactio
 
 COPY . .
 
+RUN touch .env
+
 COPY docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
+COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN mkdir -p var/cache var/log \
-    && chown -R www-data:www-data var \
-    && chmod -R 775 var
+    && composer dump-autoload --classmap-authoritative --no-dev
 
-RUN composer dump-autoload --optimize --no-dev --classmap-authoritative
-
-EXPOSE 80 443
-
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]

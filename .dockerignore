@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker (pas besoin dans le contexte de build)
+docker-compose*.yml
+.dockerignore
+
+# IDE
+.idea
+.vscode
+
+# Secrets : jamais dans l'image !
+.env
+.env.*
+!.env.example
+
+# Dépendances & caches (réinstallés au build)
+vendor/
+var/
+.phpunit.cache/
+
+# Sorties générées
+public/bundles/
+assets/vendor/
+
+# Dev & tests
+tests/
+phpunit.xml
+phpunit.dist.xml
+Makefile
+
+# Docs
+*.md

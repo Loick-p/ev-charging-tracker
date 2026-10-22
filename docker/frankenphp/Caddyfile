@@ -1,16 +1,17 @@
 {
-    frankenphp
-    order php_server before file_server
+	auto_https off
+	admin off
+
+	frankenphp
+	order php_server before file_server
 }
 
 :80 {
-    root * /app/public
+	root * /app/public
+	encode zstd gzip
 
-    encode zstd gzip
+	@hidden path_regexp \/\.
+	respond @hidden 404
 
-    log {
-        level ERROR
-    }
-
-    php_server
+	php_server
 }

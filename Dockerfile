@@ -32,3 +32,6 @@ RUN mkdir -p var/cache var/log \
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+
+HEALTHCHECK --interval=15s --timeout=5s --start-period=60s --retries=5 \
+    CMD curl -fsS http://127.0.0.1/healthz || exit 1
